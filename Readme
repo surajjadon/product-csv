@@ -1,0 +1,155 @@
+Product Catalog API
+
+This is a simple backend project for a take-home test. It lets you upload a CSV of products, save them in a database, and then search and manage them using an API.
+
+How to Run this thing
+
+Its pretty easy to get this running on your computer.
+
+What you need first:
+
+Node.js (like version 16 or newer is good)
+
+npm (this comes with Node.js)
+
+Installation
+
+First, open your terminal and go to this project folder.
+
+Then just run this command to install all the packages the project needs.
+
+npm install
+
+
+Starting the Server
+
+To start the server, you just run this command.
+
+npm start
+
+
+You will see a message like Server running on http://localhost:3000. That means its working.
+
+API Docs
+
+All the API routes start with /api/v1.
+
+1. Upload CSV File
+
+Endpoint: POST /api/v1/upload
+
+Description: You send a CSV file here to add products to database. It check every row for errors.
+
+How to send: Use form-data, with the key as file and value is your CSV file.
+
+Example Request (using Postman or curl):
+
+POST http://localhost:3000/api/v1/upload
+Body (form-data):
+Key: file
+Value: (select your products.csv file)
+
+
+Success Response:
+
+{
+    "message": "CSV processing complete. 20 rows were analyzed.",
+    "stored_count": 20,
+    "failed_count": 0,
+    "failures": []
+}
+
+
+2. Get All Products
+
+Endpoint: GET /api/v1/products
+
+Description: This gets you a list of all products in the database. It has pagination.
+
+Query Params:
+
+page (optional): which page number you want. Default is 1.
+
+limit (optional): how many products on one page. Default is 10.
+
+Example Request:
+GET http://localhost:3000/api/v1/products?page=1&limit=5
+
+Response:
+
+{
+    "total_products": 20,
+    "current_page": 1,
+    "page_limit": 5,
+    "products": [
+        {
+            "sku": "TSHIRT-RED-001",
+            "name": "Classic Cotton T-Shirt",
+            // ... other fields
+        }
+    ]
+}
+
+
+3. Search for Products
+
+Endpoint: GET /api/v1/products/search
+
+Description: Find products based on filters.
+
+Query Params:
+
+brand (optional): Search by brand or product name.
+
+color (optional): Filter by color.
+
+minPrice (optional): Minimum price.
+
+maxPrice (optional): Maximum price.
+
+Example Request:
+GET http://localhost:3000/api/v1/products/search?brand=Urban&maxPrice=1000
+
+Response:
+
+{
+    "total_found": 2,
+    "current_page": 1,
+    "page_limit": 10,
+    "products": [
+        {
+            "sku": "TSHIRT-GRY-S",
+            "name": "Graphic Tee",
+            "brand": "Urban Edge",
+            // ... other fields
+        }
+    ]
+}
+
+
+4. Update a Product
+
+Endpoint: PATCH /api/v1/products/:sku
+
+Description: Change details for one product using its SKU.
+
+Example Request:
+PATCH http://localhost:3000/api/v1/products/TSHIRT-RED-001
+
+Body (raw JSON):
+
+{
+    "price": 599,
+    "quantity": 25
+}
+
+
+5. Delete a Product
+
+Endpoint: DELETE /api/v1/products/:sku
+
+Description: Delete one product by its SKU.
+
+Example Request:
+DELETE http://localhost:3000/api/v1/products/TSHIRT-RED-001
+
