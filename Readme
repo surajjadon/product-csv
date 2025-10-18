@@ -1,155 +1,233 @@
-Product Catalog API
+# 🛍️ Product Catalog API
 
-This is a simple backend project for a take-home test. It lets you upload a CSV of products, save them in a database, and then search and manage them using an API.
 
-How to Run this thing
+A simple backend API that lets you **upload a CSV of products**, store them in a database, and manage them via RESTful endpoints. Built for a take-home test, but flexible enough for real-world use.
+---
 
-Its pretty easy to get this running on your computer.
+## 🚀 Features
 
-What you need first:
+* Upload product data via CSV
+* Store and validate records in the database
+* Paginated product listing
+* Advanced search (brand, color, price range)
+* Update and delete products via SKU
 
-Node.js (like version 16 or newer is good)
+---
 
-npm (this comes with Node.js)
+## ⚙️ Requirements
 
-Installation
+Before you start, make sure you have:
 
-First, open your terminal and go to this project folder.
+* [Node.js](https://nodejs.org/) — v16 or newer
+* npm (comes with Node.js)
 
-Then just run this command to install all the packages the project needs.
+---
 
+## 🧩 Installation
+
+Clone this repository and install dependencies:
+
+```bash
+git clone https://github.com/surajjadon/product-csv.git
+cd product-csv
 npm install
+```
 
+---
 
-Starting the Server
+## 🏃‍♂️ Run the Server
 
-To start the server, you just run this command.
+Start the development server with:
 
+```bash
 npm start
+```
 
+You should see:
 
-You will see a message like Server running on http://localhost:3000. That means its working.
+```
+Server running on http://localhost:3000
+```
 
-API Docs
+---
 
-All the API routes start with /api/v1.
+## 📘 API Documentation
 
-1. Upload CSV File
+All routes are prefixed with:
 
-Endpoint: POST /api/v1/upload
+```
+/api/v1
+```
 
-Description: You send a CSV file here to add products to database. It check every row for errors.
+---
 
-How to send: Use form-data, with the key as file and value is your CSV file.
+### 1️⃣ Upload CSV File
 
-Example Request (using Postman or curl):
+**Endpoint:**
 
+```
+POST /api/v1/upload
+```
+
+**Description:**
+Upload a CSV file containing product data. The API validates and stores each record.
+
+**Form-Data Key:**
+
+* `file`: your CSV file
+
+**Example Request:**
+
+```bash
 POST http://localhost:3000/api/v1/upload
-Body (form-data):
-Key: file
-Value: (select your products.csv file)
+```
 
+**Response:**
 
-Success Response:
-
+```json
 {
-    "message": "CSV processing complete. 20 rows were analyzed.",
-    "stored_count": 20,
-    "failed_count": 0,
-    "failures": []
+  "message": "CSV processing complete. 20 rows were analyzed.",
+  "stored_count": 20,
+  "failed_count": 0,
+  "failures": []
 }
+```
 
+---
 
-2. Get All Products
+### 2️⃣ Get All Products
 
-Endpoint: GET /api/v1/products
+**Endpoint:**
 
-Description: This gets you a list of all products in the database. It has pagination.
+```
+GET /api/v1/products
+```
 
-Query Params:
+**Query Parameters:**
 
-page (optional): which page number you want. Default is 1.
+| Name  | Type   | Description    | Default |
+| ----- | ------ | -------------- | ------- |
+| page  | number | Page number    | 1       |
+| limit | number | Items per page | 10      |
 
-limit (optional): how many products on one page. Default is 10.
+**Example:**
 
-Example Request:
+```
 GET http://localhost:3000/api/v1/products?page=1&limit=5
+```
 
-Response:
+**Response:**
 
+```json
 {
-    "total_products": 20,
-    "current_page": 1,
-    "page_limit": 5,
-    "products": [
-        {
-            "sku": "TSHIRT-RED-001",
-            "name": "Classic Cotton T-Shirt",
-            // ... other fields
-        }
-    ]
+  "total_products": 20,
+  "current_page": 1,
+  "page_limit": 5,
+  "products": [
+    {
+      "sku": "TSHIRT-RED-001",
+      "name": "Classic Cotton T-Shirt"
+    }
+  ]
 }
+```
 
+---
 
-3. Search for Products
+### 3️⃣ Search Products
 
-Endpoint: GET /api/v1/products/search
+**Endpoint:**
 
-Description: Find products based on filters.
+```
+GET /api/v1/products/search
+```
 
-Query Params:
+**Query Parameters:**
 
-brand (optional): Search by brand or product name.
+| Name     | Description             |
+| -------- | ----------------------- |
+| brand    | Filter by brand or name |
+| color    | Filter by color         |
+| minPrice | Minimum price           |
+| maxPrice | Maximum price           |
 
-color (optional): Filter by color.
+**Example:**
 
-minPrice (optional): Minimum price.
-
-maxPrice (optional): Maximum price.
-
-Example Request:
+```
 GET http://localhost:3000/api/v1/products/search?brand=Urban&maxPrice=1000
+```
 
-Response:
+**Response:**
 
+```json
 {
-    "total_found": 2,
-    "current_page": 1,
-    "page_limit": 10,
-    "products": [
-        {
-            "sku": "TSHIRT-GRY-S",
-            "name": "Graphic Tee",
-            "brand": "Urban Edge",
-            // ... other fields
-        }
-    ]
+  "total_found": 2,
+  "current_page": 1,
+  "page_limit": 10,
+  "products": [
+    {
+      "sku": "TSHIRT-GRY-S",
+      "name": "Graphic Tee",
+      "brand": "Urban Edge"
+    }
+  ]
 }
+```
 
+---
 
-4. Update a Product
+### 4️⃣ Update a Product
 
-Endpoint: PATCH /api/v1/products/:sku
+**Endpoint:**
 
-Description: Change details for one product using its SKU.
+```
+PATCH /api/v1/products/:sku
+```
 
-Example Request:
+**Example:**
+
+```
 PATCH http://localhost:3000/api/v1/products/TSHIRT-RED-001
+```
 
-Body (raw JSON):
+**Body:**
 
+```json
 {
-    "price": 599,
-    "quantity": 25
+  "price": 599,
+  "quantity": 25
 }
+```
 
+---
 
-5. Delete a Product
+### 5️⃣ Delete a Product
 
-Endpoint: DELETE /api/v1/products/:sku
+**Endpoint:**
 
-Description: Delete one product by its SKU.
+```
+DELETE /api/v1/products/:sku
+```
 
-Example Request:
+**Example:**
+
+```
 DELETE http://localhost:3000/api/v1/products/TSHIRT-RED-001
+```
 
+---
+
+## 🧪 Example CSV Format
+
+| sku            | name                   | brand      | color | price | quantity |
+| -------------- | ---------------------- | ---------- | ----- | ----- | -------- |
+| TSHIRT-RED-001 | Classic Cotton T-Shirt | Urban Edge | Red   | 499   | 10       |
+
+---
+
+## 💡 Notes
+
+* The uploaded CSV must have proper headers matching database fields.
+* The API will reject or skip invalid rows.
+* You can modify validation rules in `controllers/uploadController.js`.
+---
