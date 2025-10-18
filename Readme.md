@@ -2,7 +2,7 @@
 
 
 A simple backend API that lets you **upload a CSV of products**, store them in a database, and manage them via RESTful endpoints. Built for a take-home test, but flexible enough for real-world use.
----
+--
 
 ## 🚀 Features
 
